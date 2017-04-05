@@ -10,39 +10,43 @@ const url2 = 'http://58c7c5f6939d711200e9d1d1.mockapi.io/api/quotes/'
 let currentId = 1;
 const limitId = 2;
 
-import Perf from 'react-addons-perf'
+import Perf from 'react-addons-perf';
 
 class MainComponent extends Component {
   constructor(props){
     super(props)
     this.state = {
       fetchedAllOther: false
-    }
-    this.onfetchMoreQuotes = this.onfetchMoreQuotes.bind(this)
+    };
+    this.onfetchMoreQuotes = this.onfetchMoreQuotes.bind(this);
   }
   onfetchMoreQuotes(){
-    Perf.start()
-    let nextUrl = url2 + currentId
-    console.log('nextUrl: ', nextUrl);
-    this.props.onFetchMoreQuotes(nextUrl)
-    currentId++
+    if(currentId > limitId){
+      console.log('we are done. . .');
+      return ;
+    }
+    Perf.start();
+    let nextUrl = url2 + currentId;
+    // console.log('nextUrl: ', nextUrl);
+    this.props.onFetchMoreQuotes(nextUrl);
+    currentId++;
   }
   componentDidMount(){
-    this.props.onFetchInitialQuotes(url)
+    this.props.onFetchInitialQuotes(url);
   }
   componentDidUpdate(){
-    Perf.stop()
-    Perf.printExclusive()
-    Perf.printWasted()
+    Perf.stop();
+    Perf.printExclusive();
+    Perf.printWasted();
   }
   render(){
-    const {allQuotes, initialQuotes, moreQuotes} = this.props
+    const {allQuotes, initialQuotes, moreQuotes} = this.props;
     return (<div className='App'>
       <br/>
       <br/>
       <ul>
         {
-          allQuotes.map((quote) => <QuotesListUnit key={quote.createdAt} quote={quote.quote}/>)
+          allQuotes.map((quote, i) => <QuotesListUnit key={ i } quote={quote.quote}/>)
         }
       </ul>
       <br/>
